@@ -26,13 +26,22 @@ class ViewController: UIViewController {
         }
     }
     
+    private var calculator = CalculatorLogic()
+    
     @IBAction func calcButtonPressed(_ sender: UIButton) {
         
         //What should happen when a non-number button is pressed
         isFinishedTypingNumber = true
         
+        calculator.setNumber(displayValue)
+        
         if let currentMethod = sender.currentTitle {
- 
+            
+            
+            if let result = calculator.calculate(symbol: currentMethod) {
+                displayValue = result
+            }
+            
         }
         
     }
@@ -42,7 +51,7 @@ class ViewController: UIViewController {
         
         if let numValue = sender.currentTitle {
             
-            if isFinishedTypingNumber && numValue != "." {
+            if isFinishedTypingNumber {
                 displayLabel.text = numValue
                 isFinishedTypingNumber = false
             }
@@ -56,7 +65,6 @@ class ViewController: UIViewController {
                     }
                 }
                 
-                isFinishedTypingNumber = false
                 displayLabel.text! += numValue
             }
         }

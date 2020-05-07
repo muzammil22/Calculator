@@ -8,27 +8,51 @@
 
 import Foundation
 
-class CalculatorLogic {
+struct CalculatorLogic {
     
-    var number: Double
+    private var number: Double?
+    private var intermediate: (n1: Double, method: String)?
     
-    init(n: Double) {
-        self.number = n
+    mutating func setNumber(_ n: Double) {
+        number = n
     }
     
-    
-    func calculate(symbol: String) -> Double? {
-        if symbol == "+/-"{
-            return number * -1
-        }
-        else if symbol == "AC"{
-            return 0
-        }
-        else if symbol == "%"{
-            return number/100
+    mutating func calculate(symbol: String) -> Double? {
+        
+        if let n = number {
+            switch symbol {
+            case "+/-":
+                return n * -1
+            case "AC":
+                return 0
+            case "=":
+                return performTwoNumCalculation(n2: n)
+            case "%":
+                return n/100
+            default:
+                intermediate = (n1: n, method: symbol)
+            }
         }
         
         return nil
     }
     
+    private func performTwoNumCalculation(n2: Double) -> Double? {
+        if let n1 = intermediate?.n1, let m = intermediate?.method {
+            switch m {
+            case "+":
+                return n1 + n2
+            case "-":
+                return n1 - n2
+            case "×":
+                return n1 * n2
+            case "÷":
+                return n1 / n2
+            default:
+                fatalError("operation doesnot match any case")
+            }
+        }
+        
+        return nil
+    }
 }
